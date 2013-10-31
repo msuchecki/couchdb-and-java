@@ -1,5 +1,8 @@
 package couchdb.sofa;
 
+import com.google.common.collect.Lists;
+import java.util.Date;
+import java.util.HashMap;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
@@ -24,6 +27,16 @@ public class Main {
 
         System.out.println(sofa);
 
+        sofa.setSeats(3);
+        sofa.setDateCreated(new Date());
+        sofa.setImageURLs(Lists.newArrayList("ala", "ma", "kota"));
+        HashMap<String, Pillow> pillows = new HashMap<String, Pillow>();
+        pillows.put("pillow 1", new Pillow(Pillow.Softness.FIRM));
+        pillows.put("pillow 2", new Pillow(Pillow.Softness.FIRM));
+        pillows.put("pillow 3", new Pillow(Pillow.Softness.FIRM));
+        sofa.setPillows(pillows);
+
+        sofaRepository.update(sofa);
 
     }
 
