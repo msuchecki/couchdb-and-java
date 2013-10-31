@@ -20,12 +20,9 @@ public class Main {
 
         SofaRepository sofaRepository = (SofaRepository) context.getBean("sofaRepository");
 
-        Sofa sofa = Sofa.SofaBuilder.sofa()
-                .withColor("black")
-                .build();
+        Sofa sofa = sofaRepository.get("f99d8a4d001a7ba547d1056d83000893");
 
-
-        sofaRepository.add(sofa);
+        System.out.println(sofa);
 
 
     }
