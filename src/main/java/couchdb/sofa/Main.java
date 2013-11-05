@@ -49,7 +49,7 @@ public class Main {
 
         List<Sofa> all = sofaRepository.getAll();
 
-        all.forEach(s -> System.out.println(s));
+        all.forEach(System.out::println);
 
     }
 }
