@@ -37,7 +37,7 @@ public class Main {
         HttpClientFactoryBean httpClientFactoryBean = new HttpClientFactoryBean();
         httpClientFactoryBean.setUrl("http://localhost:5984");
         httpClientFactoryBean.afterPropertiesSet();
-        return (HttpClient) httpClientFactoryBean.getObject();
+        return httpClientFactoryBean.getObject();
 
     }
 
@@ -48,8 +48,8 @@ public class Main {
         SofaRepository sofaRepository = (SofaRepository) context.getBean("sofaRepository");
 
         List<Sofa> all = sofaRepository.getAll();
-        for (Sofa sofa : all) {
-            System.out.println(sofa);
-        }
+
+        all.forEach(s -> System.out.println(s));
+
     }
 }
