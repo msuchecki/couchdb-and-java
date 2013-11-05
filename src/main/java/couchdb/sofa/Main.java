@@ -1,6 +1,17 @@
 package couchdb.sofa;
 
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import java.util.List;
+import org.ektorp.CouchDbConnector;
+import org.ektorp.http.HttpClient;
+import org.ektorp.impl.StdCouchDbConnector;
+import org.ektorp.impl.StdCouchDbInstance;
+import org.ektorp.spring.HttpClientFactoryBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 
 /**
  * Created with IntelliJ IDEA.
@@ -8,23 +19,37 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * Date: 10/14/13
  * Time: 9:44 PM
  */
+@Configuration
+@ComponentScan
 public class Main {
 
     public static void main(String[] args) {
         new Main().couchMe();
     }
 
-    private void couchMe() {
+    @Bean(name = "sofadb")
+    CouchDbConnector couchDbConnector() throws Exception {
+        return new StdCouchDbConnector("sofa", new StdCouchDbInstance(couchHttpClient()));
+    }
 
-        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("couchdb-and-java.xml");
+    public HttpClient couchHttpClient() throws Exception {
 
-        SofaRepository sofaRepository = (SofaRepository) context.getBean("sofaRepository");
-
-        Sofa sofa = sofaRepository.get("f99d8a4d001a7ba547d1056d83000893");
-
-        System.out.println(sofa);
-
+        HttpClientFactoryBean httpClientFactoryBean = new HttpClientFactoryBean();
+        httpClientFactoryBean.setUrl("http://localhost:5984");
+        httpClientFactoryBean.afterPropertiesSet();
+        return (HttpClient) httpClientFactoryBean.getObject();
 
     }
 
+    private void couchMe() {
+
+        ApplicationContext context = new AnnotationConfigApplicationContext(Main.class);
+
+        SofaRepository sofaRepository = (SofaRepository) context.getBean("sofaRepository");
+
+        List<Sofa> all = sofaRepository.getAll();
+        for (Sofa sofa : all) {
+            System.out.println(sofa);
+        }
+    }
 }
